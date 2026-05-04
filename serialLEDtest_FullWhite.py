@@ -725,33 +725,7 @@ def regularTimingQuery(_ledqt, repeat_sec=3):
 
 ###  Main  ###
 
-def main():
-  # app = QtWidgets.QApplication(sys.argv)
-
-  # ser = connectArdSerial()
-
-  # LEDControl, 
-  ledqt = LEDControl() 
-
-  # Threading for IO - Should be safer and easier
-  SerialArdHandler_ = Thread(target=SerialArdHandler, args=(ledqt,), daemon=True)
-  # pushChannelthread = Thread(target=regularPushChannel, args=(ledqt,), daemon=True)
-  # updateTimingthread = Thread(target=regularTimingQuery, args=(ledqt,), daemon=True)
-
-  SerialArdHandler_.start()
-  # pushChannelthread.start()
-  # updateTimingthread.start()
-
-  # run
-  # sys.exit(app.exec_())
-
-  # connect
-
-  time.sleep(1)
-  print("  << Exit early with ctrl-C. >>  ")
-  # set several different animations:
-  while(not ledqt.connectedForSerialTest):
-    time.sleep(.5)
+def run_test_cycle(ledqt):
   # Everything off:
   ledqt.thlog_info("     ***  Everything Off  ***     ")
   time.sleep(1)
@@ -790,6 +764,41 @@ def main():
   ledqt.thlog_info(f"Total successful message transactions: {ledqt.total_success_responses}.")
   ledqt.thlog_info(f"Total repeated/error transactions:     {ledqt.total_fail_responses}.")
   time.sleep(1)
+
+
+def main():
+  num_cycles = int(sys.argv[1]) if len(sys.argv) > 1 else 1
+  print(f"  Running {num_cycles} cycle(s).")
+  # app = QtWidgets.QApplication(sys.argv)
+
+  # ser = connectArdSerial()
+
+  # LEDControl, 
+  ledqt = LEDControl() 
+
+  # Threading for IO - Should be safer and easier
+  SerialArdHandler_ = Thread(target=SerialArdHandler, args=(ledqt,), daemon=True)
+  # pushChannelthread = Thread(target=regularPushChannel, args=(ledqt,), daemon=True)
+  # updateTimingthread = Thread(target=regularTimingQuery, args=(ledqt,), daemon=True)
+
+  SerialArdHandler_.start()
+  # pushChannelthread.start()
+  # updateTimingthread.start()
+
+  # run
+  # sys.exit(app.exec_())
+
+  # connect
+
+  time.sleep(1)
+  print("  << Exit early with ctrl-C. >>  ")
+  # set several different animations:
+  while(not ledqt.connectedForSerialTest):
+    time.sleep(.5)
+  for cycle in range(num_cycles):
+    if num_cycles > 1:
+      ledqt.thlog_info(f"\n  === Cycle {cycle + 1} of {num_cycles} ===")
+    run_test_cycle(ledqt)
 
 
 ### Start ###
