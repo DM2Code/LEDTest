@@ -726,6 +726,8 @@ def regularTimingQuery(_ledqt, repeat_sec=3):
 ###  Main  ###
 
 def run_test_cycle(ledqt):
+  snap_success = ledqt.total_success_responses
+  snap_fail    = ledqt.total_fail_responses
   # Everything off:
   ledqt.thlog_info("     ***  Everything Off  ***     ")
   time.sleep(1)
@@ -763,8 +765,8 @@ def run_test_cycle(ledqt):
   time.sleep(.5)
 
   ledqt.thlog_info("\n")
-  ledqt.thlog_info(f"Total successful message transactions: {ledqt.total_success_responses}.")
-  ledqt.thlog_info(f"Total repeated/error transactions:     {ledqt.total_fail_responses}.")
+  ledqt.thlog_info(f"  This cycle  - successful: {ledqt.total_success_responses - snap_success},  repeated/error: {ledqt.total_fail_responses - snap_fail}.")
+  ledqt.thlog_info(f"  Cumulative  - successful: {ledqt.total_success_responses},  repeated/error: {ledqt.total_fail_responses}.")
   time.sleep(1)
 
 
